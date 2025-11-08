@@ -9,7 +9,6 @@
 body, html {
     width: 100%;
     height: 100%;
-    /* Using a more modern, edgy font if available, falling back to sans-serif */
     font-family: 'Arial Black', 'Impact', sans-serif;
     overflow: hidden;
     background-color: #000;
@@ -23,8 +22,12 @@ body, html {
     height: 100dvh; /* Dynamic viewport height for better mobile browser support */
     position: relative;
     overflow: hidden;
-    /* Dark Red Night Theme Gradient */
-    background: linear-gradient(to bottom, #000000 0%, #1a0000 50%, #4a0000 100%);
+    
+    /* --- NEW BACKGROUND STYLES --- */
+    background: url('background.jpg') no-repeat center center / cover; /* Replace 'party_background.jpg' with your image file name */
+    /* Fallback/Overlay color if image doesn't load or for tinting */
+    background-color: #1a0000; 
+    
     user-select: none;
 }
 
@@ -52,9 +55,9 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    /* Darker, semi-transparent black for the night theme */
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(5px); /* Adds a nice blur effect behind text */
+    /* Reduced opacity to let background image show through */
+    background: rgba(0, 0, 0, 0.7); /* Slightly lighter overlay */
+    backdrop-filter: blur(3px); /* Slightly less blur to reveal background more */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -70,7 +73,6 @@ body, html {
     margin-bottom: 10px;
     color: #fff;
     text-transform: uppercase;
-    /* Red neon glow effect */
     text-shadow: 
         0 0 5px #fff,
         0 0 10px #fff,
@@ -114,7 +116,6 @@ body, html {
     transition: all 0.2s ease;
 }
 
-/* Neon Button Style */
 .neon-btn {
     background-color: transparent;
     color: #ff3838;
@@ -162,7 +163,7 @@ body, html {
     position: absolute;
     bottom: 20px;
     right: 20px;
-    font-size: 2.5rem; /* Larger for mobile tapping */
+    font-size: 2.5rem;
     background: none;
     border: none;
     cursor: pointer;
@@ -170,22 +171,18 @@ body, html {
     opacity: 0.7;
 }
 
-/* --- Balloon Styling (FIXED & THEMED) --- */
+/* --- Balloon Styling --- */
 .balloon {
     position: absolute;
-    bottom: -150px; /* Start off-screen */
+    bottom: -150px;
     border-radius: 50%;
     cursor: pointer;
-    will-change: transform; /* Performance optimization for mobile */
-    
-    /* Gives balloons a slight "night shine" */
+    will-change: transform;
     box-shadow: inset -10px -10px 20px rgba(0,0,0,0.3), inset 5px 5px 15px rgba(255,255,255,0.2);
-
     opacity: 0;
     transition: opacity 0.1s ease-in;
 }
 
-/* Corrected CSS for the balloon tie */
 .balloon::after {
     content: '';
     position: absolute;
@@ -197,7 +194,7 @@ body, html {
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-top: 12px solid;
-    border-top-color: inherit; /* Inherit color from parent balloon */
+    border-top-color: inherit;
 }
 
 .popped {
