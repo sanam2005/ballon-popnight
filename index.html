@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Ensure proper scaling on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <title>POP NIGHT!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="game-container" id="game-container">
+        <!-- Game HUD -->
+        <div class="hud">
+            <div id="score-display">SCORE: 0</div>
+            <div id="timer-display">TIME: 60</div>
+        </div>
+
+        <!-- Start Screen Overlay -->
+        <div class="overlay" id="start-screen">
+            <h1 class="glow-text">POP NIGHT!</h1>
+            <p class="event-details">REVEAL 10TH NOV<br>@ HFC LAWNS</p>
+            
+            <p class="instructions">Tap the balloons before time runs out.</p>
+            <button id="start-button" class="btn neon-btn">PLAY NOW</button>
+            
+            <div class="leaderboard">
+                <h2>TOP SCORERS</h2>
+                <ol id="high-score-list">
+                    <li>---</li>
+                    <li>---</li>
+                    <li>---</li>
+                    <li>---</li>
+                    <li>---</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Game Over Screen Overlay -->
+        <div class="overlay" id="game-over-screen" style="display: none;">
+            <h2 class="glow-text">TIME'S UP!</h2>
+            <p id="final-score">FINAL SCORE: 0</p>
+            <p class="event-details-small">See you on the 10th @ HFC Lawns</p>
+            <button id="restart-button" class="btn neon-btn">TRY AGAIN</button>
+        </div>
+    </div>
+
+    <!-- Sound Toggle -->
+    <button id="sound-toggle" class="sound-btn">🔇</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
