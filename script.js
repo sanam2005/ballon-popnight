@@ -28,14 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let balloons = [];
     let highScores = [];
 
-    // UPDATED COLORS: Night/Red Theme
-    const BALLOON_COLORS = [
-        '#ff0000', // Pure Red
-        '#cc0000', // Darker Red
-        '#ff4d4d', // Light Neon Red
-        '#ffffff', // White (for contrast)
-        '#333333'  // Dark Grey (stealth balloons)
-    ];
+    // BALLOON COLORS
+    const BALLOON_COLORS = ['#ff0000', '#cc0000', '#ff4d4d', '#ffffff', '#333333'];
 
     // =================================================================
     // --- Game Logic Functions ---
@@ -49,15 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateScoreDisplay();
         updateTimerDisplay();
 
-        // Clear any leftover balloons safely
         Array.from(document.getElementsByClassName('balloon')).forEach(b => b.remove());
 
         startScreen.style.display = 'none';
         gameOverScreen.style.display = 'none';
         
-        // Try to play music (might be blocked by browser until user interaction)
         playMusic();
-
         startGameTimer();
         spawnBalloon();
         gameLoop();
@@ -98,39 +89,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const balloon = document.createElement('div');
         balloon.classList.add('balloon');
 
-        // Sizing for mobile: slightly larger minimum size for easier tapping
-        const size = Math.random() * (110 - 60) + 60; // 60px to 110px
-        // Speed calculation adjusted for new sizes
-        const speed = (180 / size) * (window.innerHeight / 1000) * 2.5; 
-        const points = Math.floor(170 - size);
+        // --- DIFFICULTY TWEAKS HERE ---
+        // 1. Smaller size range (45px to 95px) - Harder to tap
+        const size = Math.random() * (95 - 45) + 45;
+        
+        // 2. Increased speed multiplier (from 2.5 to 3.5) - Moves faster
+        // We also increased base speed factor from 180 to 200
+        const speed = (200 / size) * (window.innerHeight / 1000) * 3.5; 
+        
+        // Points based on new sizes
+        const points = Math.floor(150 - size);
 
         balloon.style.width = `${size}px`;
         balloon.style.height = `${size * 1.18}px`;
         
         const color = BALLOON_COLORS[Math.floor(Math.random() * BALLOON_COLORS.length)];
         balloon.style.backgroundColor = color;
-        balloon.style.borderTopColor = color; // For the tie inheritance
+        balloon.style.borderTopColor = color;
         
-        // Ensure balloon stays within screen width bounds
         const maxLeft = gameContainer.clientWidth - size;
         balloon.style.left = `${Math.max(0, Math.min(maxLeft, Math.random() * maxLeft))}px`;
         
-        // --- CRITICAL FIX APPLIED HERE ---
-        balloon.dataset.y = 0; // Start at 0 translation (CSS places it at bottom: -150px)
+        balloon.dataset.y = 0;
         balloon.dataset.speed = speed;
         balloon.dataset.points = points;
 
         gameContainer.appendChild(balloon);
         balloons.push(balloon);
 
-        // Use slight delay to allow browser to render before fading in
-        requestAnimationFrame(() => {
-             balloon.style.opacity = 1;
-        });
+        requestAnimationFrame(() => { balloon.style.opacity = 1; });
 
-        // Touchstart is faster than click on mobile
         balloon.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Prevents double-firing with click on some devices
+            e.preventDefault();
             popBalloon(e);
         }, { passive: false });
         balloon.addEventListener('mousedown', popBalloon);
@@ -139,8 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function spawnBalloon() {
         if (!gameActive) return;
         createBalloon();
-        // Spawn rate slightly faster for more intensity
-        const randomTime = Math.random() * (800 - 200) + 200;
+        
+        // --- DIFFICULTY TWEAK HERE ---
+        // 3. Faster spawn rate (between 150ms and 650ms)
+        const randomTime = Math.random() * (650 - 150) + 150;
         setTimeout(spawnBalloon, randomTime);
     }
 
@@ -151,8 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
             balloon.dataset.y = newY;
             balloon.style.transform = `translateY(${-newY}px)`;
 
-            // Remove if it goes off the top of the screen
-            // Adding extra buffer (200px) to ensure it's fully off-screen
             if (newY > window.innerHeight + 200) {
                 balloon.remove();
                 balloons.splice(i, 1);
@@ -168,10 +158,9 @@ document.addEventListener('DOMContentLoaded', () => {
         score += parseInt(balloon.dataset.points);
         updateScoreDisplay();
 
-        // Clone audio node for overlapping sounds on rapid pops
         const soundClone = popSound.cloneNode();
         soundClone.volume = 0.6;
-        soundClone.play().catch(() => {}); // Ignore errors if user hasn't interacted yet
+        soundClone.play().catch(() => {});
 
         balloon.classList.add('popped');
         balloons = balloons.filter(b => b !== balloon);
@@ -194,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
         music.play().then(() => {
             soundToggle.textContent = '🔊';
         }).catch((e) => {
-            console.log("Autoplay prevented pending user interaction");
             soundToggle.textContent = '🔇';
         });
     }
@@ -211,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadHighScores() {
         const scores = JSON.parse(localStorage.getItem('popNightScores')) || [];
         highScores = scores.sort((a, b) => b - a).slice(0, 5);
-        
         highScoreList.innerHTML = '';
         if (highScores.length === 0) {
             highScoreList.innerHTML = '<li>---</li><li>---</li><li>---</li>';
@@ -236,8 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
     startButton.addEventListener('click', startGame);
     restartButton.addEventListener('click', startGame);
     soundToggle.addEventListener('click', toggleMusic);
-    
-    // Prevent default touch behaviors (like scrolling/zooming) on the game container
     gameContainer.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
 
     loadHighScores();
